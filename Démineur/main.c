@@ -104,5 +104,5 @@ int bombsAround(unsigned char tableau[GRID_LENGTH][GRID_LENGTH], unsigned int x,
             bombsAround++;
         }
     } 
-    if
+    
 }
