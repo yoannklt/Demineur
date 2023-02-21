@@ -8,6 +8,7 @@
 void displayGrid(unsigned char tableau[GRID_LENGTH][GRID_LENGTH]);
 void placeBomb(unsigned char tableau[GRID_LENGTH][GRID_LENGTH], unsigned int quantity);
 void play(unsigned char tableau[GRID_LENGTH][GRID_LENGTH], unsigned int x, unsigned int y);
+int bombsAround(unsigned char tableau[GRID_LENGTH][GRID_LENGTH], unsigned int x, unsigned int y);
 
 int main(int argc, char **argv)
 {
@@ -43,6 +44,7 @@ void displayGrid(unsigned char tableau[GRID_LENGTH][GRID_LENGTH])
     for (int i = 0; i < GRID_LENGTH; i++) {
         printf("|");
         for (int y = 0; y < GRID_LENGTH; y++) {
+            int bombs = bombsAround(tableau, i, y);
             switch (tableau[i][y]) {
                 case 0:
                     printf(" - |");
@@ -51,7 +53,7 @@ void displayGrid(unsigned char tableau[GRID_LENGTH][GRID_LENGTH])
                     printf(" - |");
                     continue;
                 case 9:
-                    printf(" %d |", tableau[i][y]);
+                    printf(" %d |", bombs);
                     continue;
                 default:
                     printf(" %d |", tableau[i][y]);
@@ -94,15 +96,38 @@ void play(unsigned char tableau[GRID_LENGTH][GRID_LENGTH], unsigned int x, unsig
 int bombsAround(unsigned char tableau[GRID_LENGTH][GRID_LENGTH], unsigned int x, unsigned int y)
 {
     unsigned int bombsAround = 0;
-    if (0 <= x - 1) {
-        if (tableau[x - 1][y] == 1) {
+
+    if (0 <= x - 1) 
+        if (tableau[x - 1][y] == 1) 
             bombsAround++;
-        }
-    }
-    if (0 <= y - 1) {
-        if (tableau[x][y - 1] == 1) {
+        
+    if (0 <= y - 1) 
+        if (tableau[x][y - 1] == 1) 
             bombsAround++;
-        }
-    } 
+        
+    if (9 >= x + 1) 
+        if (tableau[x + 1][y] == 1)
+            bombsAround++;
+
+    if (9 >= y + 1)
+        if (tableau[x][y + 1] == 1)
+            bombsAround++;
+
+    if (0 <= x - 1 && 0 <= y - 1)
+        if (tableau[x - 1][y - 1] == 1)
+            bombsAround++;
     
+    if (0 >= x + 1 && 0 >= y + 1)
+        if (tableau[x + 1][y + 1] == 1)
+            bombsAround++;
+
+    if (0 <= x - 1 && 9 >= y + 1)
+        if (tableau[x - 1][y + 1] == 1)
+            bombsAround++;
+
+    if (0 <= y - 1 && 9 >= x + 1)
+        if (tableau[x + 1][y - 1] == 1)
+            bombsAround++;
+
+    return bombsAround;
 }
