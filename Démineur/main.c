@@ -87,4 +87,4 @@ void placeBomb(unsigned char tableau[GRID_LENGHT][GRID_LENGHT], unsigned int qua
 void play(unsigned char tableau[GRID_LENGHT][GRID_LENGHT], unsigned int x, unsigned int y)
 {
     tableau[x][y] = 9;
-}g
+}
