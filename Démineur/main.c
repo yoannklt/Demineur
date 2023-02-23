@@ -64,7 +64,6 @@ int main(int argc, char **argv)
         lap++;
         printf("Nombre de tour : %d\n", lap);
         printf("Temps de la partie : %d\n", (int)temps / CLOCKS_PER_SEC);
-        printf("Score : %d \n", score);
     }
    
     return 0;
