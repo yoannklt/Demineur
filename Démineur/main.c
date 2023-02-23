@@ -33,6 +33,7 @@ int main(int argc, char **argv)
     play(tableau, locationX - 1, locationY - 1);
 
     printf("Nombre de bombes dans le tableau : %d \n", BOMB_NUMBER);
+    system("CLS");
     displayGrid(tableau);
 
     while (1) {
@@ -46,12 +47,13 @@ int main(int argc, char **argv)
         scanf_s("%d", &locationY);
 
         if (play(tableau, locationX - 1, locationY - 1) == 3) {
+            system("CLS");
             displayGrid(tableau);
             printf("VOUS AVEZ PERDU RATIO BOZO");
             return 2;
         }
         
-
+        system("CLS");
         displayGrid(tableau);
         if (victory(tableau) == 0) {
             printf("VOUS AVEZ GAGNE GG WP BAKA!!!!!");
