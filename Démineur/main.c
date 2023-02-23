@@ -34,20 +34,22 @@ int main(int argc, char **argv)
 
     displayGrid(tableau);
     printf("TABLEAU AVANT PLAY\n");
+    printf("Nombre de bombes presente dans le tableau : %d \n", BOMB_NUMBER);
 
     while (1) {
+        clock_t temps; 
+        temps = clock();
         printf("Choississez vos coordonnees : \n");
         printf("x : ");
         scanf_s("%d", &locationX);
         printf("y : ");
         scanf_s("%d", &locationY);
-
-
         play(tableau, locationX - 1, locationY - 1);
-
         displayGrid(tableau);
         printf("TABLEAU APRES PLAY\n");
         lap++;
+        printf("Nombre de tour : %d\n", lap);
+        printf("Temps de la partie : %d\n", (int)temps / CLOCKS_PER_SEC);
     }
    
     return 0;
