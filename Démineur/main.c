@@ -127,7 +127,7 @@ void displayGrid( char tableau[GRID_LENGTH][GRID_LENGTH])
                     printf("   |");
                     continue;
                 case 9:
-                    Color(4, 7);
+                    Color(4, 0);
                     printf(" * ");
                     Color(15, 0);
                     printf("|");
