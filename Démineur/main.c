@@ -25,12 +25,13 @@ int main(int argc, char **argv)
 
     printf("Il y a %d bombes dans la grille, bon courage !\n", BOMB_NUMBER);
     displayGrid(tableau);
-
+   
     printf("Quelle case voulez-vous decouvrir ? :\n");
-    printf("X :");
-    scanf_s("%d", &locationX);
-    printf("Y :");
-    scanf_s("%d", &locationY);
+    printf("X:");
+    scanf_s(" %d", &locationX);
+    printf("Y:");
+    scanf_s(" %d", &locationY);
+    
     
     placeBomb(tableau, BOMB_NUMBER, locationX, locationY);
     play(tableau, locationX - 1, locationY - 1);
@@ -39,7 +40,6 @@ int main(int argc, char **argv)
 
    
     while (1) {
-
         int lap = 1;
         clock_t temps = clock();
         int score = temps / CLOCKS_PER_SEC / lap + 1;
@@ -50,7 +50,8 @@ int main(int argc, char **argv)
         scanf_s(" %d", &locationX);
         printf("Y:");
         scanf_s(" %d", &locationY);
-
+        
+        
         if (play(tableau, locationX - 1, locationY - 1) == 3) {
             system("cls");
             displayGrid(tableau);
@@ -205,7 +206,8 @@ int victory(char tableau[GRID_LENGTH][GRID_LENGTH])
     return 0;
 }
 
-void Color(int couleurDuTexte, int couleurDeFond) // fonction d'affichage de couleurs
+// FONCTION QUI MET DE LA COULEUR DANS MA VIE
+void Color(int couleurDuTexte, int couleurDeFond) 
 {
     HANDLE H = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleTextAttribute(H, couleurDeFond * 16 + couleurDuTexte);
