@@ -13,9 +13,14 @@ void placeBomb(unsigned char tableau[GRID_LENGTH][GRID_LENGTH], unsigned int qua
 int play(unsigned char tableau[GRID_LENGTH][GRID_LENGTH], unsigned int x, unsigned int y);
 int bombsAround(unsigned char tableau[GRID_LENGTH][GRID_LENGTH], unsigned int x, unsigned int y);
 
+void displayGrid( char tableau[GRID_LENGTH][GRID_LENGTH]);
+void placeBomb( char tableau[GRID_LENGTH][GRID_LENGTH],  int quantity);
+void play( char tableau[GRID_LENGTH][GRID_LENGTH],  int x,  int y);
+int bombsAround( char tableau[GRID_LENGTH][GRID_LENGTH],  int x,  int y);
+
 int main(int argc, char **argv)
 {
-    unsigned char tableau[GRID_LENGTH][GRID_LENGTH] = { 0 };
+    char tableau[GRID_LENGTH][GRID_LENGTH] = { 0 };
     int locationX = 0;
     int locationY = 0;
 
@@ -24,6 +29,8 @@ int main(int argc, char **argv)
     placeBomb(tableau, BOMB_NUMBER);
 
     displayGrid(tableau);
+
+
     printf("Choississez vos coordonnees : \n");
     printf("x : ");
     scanf_s("%d", &locationX);
@@ -37,7 +44,7 @@ int main(int argc, char **argv)
     return 0;
 }
 
-void displayGrid(unsigned char tableau[GRID_LENGTH][GRID_LENGTH])
+void displayGrid( char tableau[GRID_LENGTH][GRID_LENGTH])
 {
     printf("\n");
     for (int z = 0; z < GRID_LENGTH; z++) {
@@ -47,7 +54,6 @@ void displayGrid(unsigned char tableau[GRID_LENGTH][GRID_LENGTH])
     for (int i = 0; i < GRID_LENGTH; i++) {
         printf("|");
         for (int y = 0; y < GRID_LENGTH; y++) {
-            int bombs = bombsAround(tableau, i, y);
             switch (tableau[i][y]) {
                 case HIDDEN_CELL:
                     printf(" - |");
@@ -70,7 +76,7 @@ void displayGrid(unsigned char tableau[GRID_LENGTH][GRID_LENGTH])
     }
 }
 
-void placeBomb(unsigned char tableau[GRID_LENGTH][GRID_LENGTH], unsigned int quantity)
+void placeBomb( char tableau[GRID_LENGTH][GRID_LENGTH],  int quantity)
 {
     int bomb = 1;
 
