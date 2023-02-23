@@ -71,10 +71,10 @@ void displayGrid( char tableau[GRID_LENGTH][GRID_LENGTH])
                     printf(" - |");
                     continue;
                 case BOMB_CELL:
-                    printf(" - |");
+                    printf(" * |");
                     continue;
                 case DISCOVERED_CELL:
-                    printf(" O |");
+                    printf("   |");
                     continue;
                 case 9:
                     printf(" * |");
