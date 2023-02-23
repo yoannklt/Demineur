@@ -9,6 +9,7 @@
 #define BOMB_CELL 1
 #define HIDDEN_CELL 0
 
+void welcome();
 void displayGrid( char tableau[GRID_LENGTH][GRID_LENGTH]);
 void placeBomb( char tableau[GRID_LENGTH][GRID_LENGTH],  int quantity, int x, int y);
 int play( char tableau[GRID_LENGTH][GRID_LENGTH], int x,  int y);
@@ -22,8 +23,7 @@ int main(int argc, char **argv)
     int locationX = 0;
     int locationY = 0;
     srand(time(NULL));
-
-    printf("Il y a %d bombes dans la grille, bon courage !\n", BOMB_NUMBER);
+    welcome();
     displayGrid(tableau);
    
     printf("Quelle case voulez-vous decouvrir ? :\n");
@@ -31,7 +31,14 @@ int main(int argc, char **argv)
     scanf_s(" %d", &locationX);
     printf("Y:");
     scanf_s(" %d", &locationY);
-    
+    while (locationX - 1 > GRID_LENGTH || locationY - 1 > GRID_LENGTH) {
+        printf("\nJouez des coordonnees X et Y comprises entre 1 et %d\n", GRID_LENGTH);
+        printf("Quelle case voulez-vous decouvrir ? :\n");
+        printf("X:");
+        scanf_s(" %d", &locationX);
+        printf("Y:");
+        scanf_s(" %d", &locationY);
+    }
     
     placeBomb(tableau, BOMB_NUMBER, locationX, locationY);
     play(tableau, locationX - 1, locationY - 1);
@@ -50,8 +57,15 @@ int main(int argc, char **argv)
         scanf_s(" %d", &locationX);
         printf("Y:");
         scanf_s(" %d", &locationY);
-        
-        
+        while (locationX - 1 > GRID_LENGTH || locationY - 1 > GRID_LENGTH) {
+            printf("\nJouez des coordonnees X et Y comprises entre 1 et %d", GRID_LENGTH);
+            printf("\nQuelle case voulez-vous decouvrir ? :\n");
+            printf("X:");
+            scanf_s(" %d", &locationX);
+            printf("Y:");
+            scanf_s(" %d", &locationY);
+        }
+  
         if (play(tableau, locationX - 1, locationY - 1) == 3) {
             system("cls");
             displayGrid(tableau);
@@ -75,15 +89,32 @@ int main(int argc, char **argv)
     return 0;
 }
 
+void welcome() {
+    printf("*****************************************************\n");
+    printf("||                                                 ||\n");
+    printf("||                  Bienvenue !!!!                 ||\n");
+    printf("||  Il y a %d bombes dans la grille, bon courage ! ||\n", BOMB_NUMBER);
+    printf("||                                                 ||\n");
+    printf("*****************************************************\n\n");
+}
+
 void displayGrid( char tableau[GRID_LENGTH][GRID_LENGTH])
 {
-    printf("\n");
-    for (int z = 0; z < GRID_LENGTH; z++) {
-        printf("----");
+    printf("   ");
+    for (int k = 0; k < GRID_LENGTH; k++) {
+        printf("| ");
+        printf("%d ", k + 1);
     }
-    printf("-\n");
+    printf("\n");
+    for (int z = 0; z < GRID_LENGTH + 4; z++) {
+        printf("---");
+    }
+    printf("--\n");
     for (int i  = 0; i < GRID_LENGTH; i++) {
-        printf("|");
+        if (i == 9)
+            printf(" 10|");
+        else
+            printf(" %d |", i + 1);
         for (int y = 0; y < GRID_LENGTH; y++) {
             switch (tableau[i][y]) {
                 case HIDDEN_CELL:
@@ -96,7 +127,7 @@ void displayGrid( char tableau[GRID_LENGTH][GRID_LENGTH])
                     printf("   |");
                     continue;
                 case 9:
-                    Color(4, 0);
+                    Color(4, 7);
                     printf(" * ");
                     Color(15, 0);
                     printf("|");
@@ -107,10 +138,10 @@ void displayGrid( char tableau[GRID_LENGTH][GRID_LENGTH])
             }           
         }
         printf("\n");
-        for (int z = 0; z < GRID_LENGTH; z++) {
-            printf("----");
+        for (int z = 0; z < GRID_LENGTH + 4; z++) {
+            printf("---");
         }
-        printf("-\n");
+        printf("--\n");
     }
 }
 
