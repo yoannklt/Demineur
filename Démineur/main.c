@@ -102,14 +102,16 @@ void displayGrid( char tableau[GRID_LENGTH][GRID_LENGTH])
 {
     printf("   ");
     for (int k = 0; k < GRID_LENGTH; k++) {
-        printf("| ");
-        printf("%d ", k + 1);
+        if (k == GRID_LENGTH - 1)
+            printf("|%d ", k + 1);
+        else
+            printf("| %d ", k + 1);
+    }
+    printf("|\n");
+    for (int z = 0; z < GRID_LENGTH + 1; z++) {
+        printf("----");
     }
     printf("\n");
-    for (int z = 0; z < GRID_LENGTH + 4; z++) {
-        printf("---");
-    }
-    printf("--\n");
     for (int i  = 0; i < GRID_LENGTH; i++) {
         if (i == 9)
             printf(" 10|");
