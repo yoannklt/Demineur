@@ -3,7 +3,7 @@
 #include <time.h>
 
 #define GRID_LENGTH 10
-#define BOMB_NUMBER 17
+#define BOMB_NUMBER 14
 #define DISCOVERED_CELL 2
 #define BOMB_CELL 1
 #define HIDDEN_CELL 0
@@ -45,8 +45,18 @@ int main(int argc, char **argv)
         printf("y : ");
         scanf_s("%d", &locationY);
 
-        play(tableau, locationX - 1, locationY - 1);
+        if (play(tableau, locationX - 1, locationY - 1) == 3) {
+            displayGrid(tableau);
+            printf("VOUS AVEZ PERDU RATIO BOZO");
+            return 2;
+        }
+        
+
         displayGrid(tableau);
+        if (victory(tableau) == 0) {
+            printf("VOUS AVEZ GAGNE GG WP BAKA!!!!!");
+            return 1;
+        }
 
         lap++;
         printf("Nombre de tour : %d\n", lap);
@@ -71,7 +81,7 @@ void displayGrid( char tableau[GRID_LENGTH][GRID_LENGTH])
                     printf(" - |");
                     continue;
                 case BOMB_CELL:
-                    printf(" * |");
+                    printf(" - |");
                     continue;
                 case DISCOVERED_CELL:
                     printf("   |");
@@ -128,12 +138,23 @@ int play(char tableau[GRID_LENGTH][GRID_LENGTH],  int x,  int y)
     int bombs = bombsAround(tableau, x, y);
     printf("BEBONS %d\n", bombs);
 
+    if (tableau[y][x] == BOMB_CELL) {
+        for (int i = 0; i < GRID_LENGTH; i++) {
+            for (int j = 0; j < GRID_LENGTH; j++) {
+                if (tableau[i][j] == BOMB_CELL)
+                    tableau[i][j] = 9;
+            }
+        }
+        return 3;
+    }
+    else 
+        tableau[y][x] = DISCOVERED_CELL;
+
     if (bombs != 0) {
         tableau[y][x] = bombs + 3;
         return 1;
     }
 
-    tableau[y][x] = DISCOVERED_CELL;
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
             if (i - 1 != 0 || j - 1 != 0) {
@@ -162,4 +183,15 @@ int bombsAround( char tableau[GRID_LENGTH][GRID_LENGTH],  int x,  int y)
 
     return bombsAround;
     
+}
+
+int victory(char tableau[GRID_LENGTH][GRID_LENGTH])
+{
+    for (int i = 0; i < GRID_LENGTH; i++) {
+        for (int j = 0; j < GRID_LENGTH; j++) {
+            if (tableau[i][j] == HIDDEN_CELL)
+                return 1;
+        }   
+    }
+    return 0;
 }
