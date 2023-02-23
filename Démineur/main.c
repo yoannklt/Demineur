@@ -101,31 +101,31 @@ int bombsAround(unsigned char tableau[GRID_LENGTH][GRID_LENGTH], unsigned int x,
         if (tableau[x - 1][y] == 1) 
             bombsAround++;
         
-    if (0 <= y - 1) 
+    else if (0 <= y - 1) 
         if (tableau[x][y - 1] == 1) 
             bombsAround++;
         
-    if (9 >= x + 1) 
+    else if (9 >= x + 1)
         if (tableau[x + 1][y] == 1)
             bombsAround++;
 
-    if (9 >= y + 1)
+    else if (9 >= y + 1)
         if (tableau[x][y + 1] == 1)
             bombsAround++;
 
-    if (0 <= x - 1 && 0 <= y - 1)
+    else if (0 <= x - 1 && 0 <= y - 1)
         if (tableau[x - 1][y - 1] == 1)
             bombsAround++;
     
-    if (0 >= x + 1 && 0 >= y + 1)
+    else if (0 >= x + 1 && 0 >= y + 1)
         if (tableau[x + 1][y + 1] == 1)
             bombsAround++;
 
-    if (0 <= x - 1 && 9 >= y + 1)
+    else if (0 <= x - 1 && 9 >= y + 1)
         if (tableau[x - 1][y + 1] == 1)
             bombsAround++;
 
-    if (0 <= y - 1 && 9 >= x + 1)
+    else if (0 <= y - 1 && 9 >= x + 1)
         if (tableau[x + 1][y - 1] == 1)
             bombsAround++;
 
