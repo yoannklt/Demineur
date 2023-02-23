@@ -18,8 +18,8 @@ int main(int argc, char **argv)
     char tableau[GRID_LENGTH][GRID_LENGTH] = { 0 };
     int locationX = 0;
     int locationY = 0;
-    int lap = 0;
-
+    int lap = 1;
+    
     srand(time(NULL));
     printf("Nombre de bombes dans le tableau : %d \n", BOMB_NUMBER);
     displayGrid(tableau);
@@ -36,9 +36,9 @@ int main(int argc, char **argv)
     displayGrid(tableau);
 
     while (1) {
-        clock_t temps; 
+        clock_t temps;
         temps = clock();
-
+        int score = temps / CLOCKS_PER_SEC / lap;
         printf("Choississez vos coordonnees : \n");
         printf("x : ");
         scanf_s("%d", &locationX);
@@ -47,20 +47,24 @@ int main(int argc, char **argv)
 
         if (play(tableau, locationX - 1, locationY - 1) == 3) {
             displayGrid(tableau);
-            printf("VOUS AVEZ PERDU RATIO BOZO");
+            printf("VOUS AVEZ PERDU RATIO BOZO \n");
+            printf("Vous avez joue %d tours, en %d secondes.", lap - 1, (int)temps / CLOCKS_PER_SEC);
+
             return 2;
         }
         
 
         displayGrid(tableau);
         if (victory(tableau) == 0) {
-            printf("VOUS AVEZ GAGNE GG WP BAKA!!!!!");
+            printf("VOUS AVEZ GAGNE GG WP BAKA!!!!! \n");
+            printf("Votre score est de %d, votre partie à durée %d secondes, et vous avez jouer %d tours.", score, (int)temps / CLOCKS_PER_SEC, lap - 1);
             return 1;
         }
 
         lap++;
         printf("Nombre de tour : %d\n", lap);
         printf("Temps de la partie : %d\n", (int)temps / CLOCKS_PER_SEC);
+        printf("Score : %d \n", score);
     }
    
     return 0;
@@ -115,7 +119,6 @@ void placeBomb( char tableau[GRID_LENGTH][GRID_LENGTH], int quantity, int x, int
             continue;
         }
         else {
-            printf("Bombe numero %d : %d | %d\n", bomb, locationX, locationY);
             tableau[locationY][locationX] = BOMB_CELL;
             bomb++;
         }
@@ -136,7 +139,6 @@ void placeBomb( char tableau[GRID_LENGTH][GRID_LENGTH], int quantity, int x, int
 int play(char tableau[GRID_LENGTH][GRID_LENGTH],  int x,  int y)
 {
     int bombs = bombsAround(tableau, x, y);
-    printf("BEBONS %d\n", bombs);
 
     if (tableau[y][x] == BOMB_CELL) {
         for (int i = 0; i < GRID_LENGTH; i++) {
