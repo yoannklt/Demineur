@@ -21,7 +21,7 @@ int main(int argc, char **argv)
     int lap = 0;
 
     srand(time(NULL));
-
+    printf("Nombre de bombes dans le tableau : %d \n", BOMB_NUMBER);
     displayGrid(tableau);
     printf("Choississez vos coordonnees : \n");
     printf("x : ");
@@ -32,21 +32,22 @@ int main(int argc, char **argv)
     placeBomb(tableau, BOMB_NUMBER, locationX - 1, locationX - 1);
     play(tableau, locationX - 1, locationY - 1);
 
+    printf("Nombre de bombes dans le tableau : %d \n", BOMB_NUMBER);
     displayGrid(tableau);
-    printf("TABLEAU AVANT PLAY\n");
-    printf("Nombre de bombes presente dans le tableau : %d \n", BOMB_NUMBER);
 
     while (1) {
         clock_t temps; 
         temps = clock();
+
         printf("Choississez vos coordonnees : \n");
         printf("x : ");
         scanf_s("%d", &locationX);
         printf("y : ");
         scanf_s("%d", &locationY);
+
         play(tableau, locationX - 1, locationY - 1);
         displayGrid(tableau);
-        printf("TABLEAU APRES PLAY\n");
+
         lap++;
         printf("Nombre de tour : %d\n", lap);
         printf("Temps de la partie : %d\n", (int)temps / CLOCKS_PER_SEC);
@@ -70,10 +71,13 @@ void displayGrid( char tableau[GRID_LENGTH][GRID_LENGTH])
                     printf(" - |");
                     continue;
                 case BOMB_CELL:
-                    printf(" X |");
+                    printf(" - |");
                     continue;
                 case DISCOVERED_CELL:
                     printf(" O |");
+                    continue;
+                case 9:
+                    printf(" * |");
                     continue;
                 default:
                     printf(" %d |", tableau[i][y] - 3);
@@ -107,10 +111,8 @@ void placeBomb( char tableau[GRID_LENGTH][GRID_LENGTH], int quantity, int x, int
         }
     }
 
-    for (int i = 0; i < 3; i++)
-    {
-        for (int j = 0; j < 3; j++)
-        {
+    for (int i = 0; i < 3; i++){
+        for (int j = 0; j < 3; j++){
             if (x + i - 1 >= 0 && x + i - 1 < GRID_LENGTH && y + j - 1 >= 0 && y + j - 1 < GRID_LENGTH)
             {
                 tableau[y + j - 1][x + i - 1] = HIDDEN_CELL;
