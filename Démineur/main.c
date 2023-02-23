@@ -1,6 +1,7 @@
 ﻿#include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include <windows.h>
 
 #define GRID_LENGTH 10
 #define BOMB_NUMBER 14
@@ -12,60 +13,62 @@ void displayGrid( char tableau[GRID_LENGTH][GRID_LENGTH]);
 void placeBomb( char tableau[GRID_LENGTH][GRID_LENGTH],  int quantity, int x, int y);
 int play( char tableau[GRID_LENGTH][GRID_LENGTH], int x,  int y);
 int bombsAround( char tableau[GRID_LENGTH][GRID_LENGTH],  int x,  int y);
+int victory(char tableau[GRID_LENGTH][GRID_LENGTH]);
+void Color(int couleurDuTexte, int couleurDeFond);
 
 int main(int argc, char **argv)
 {
     char tableau[GRID_LENGTH][GRID_LENGTH] = { 0 };
     int locationX = 0;
     int locationY = 0;
-    int lap = 1;
-    
     srand(time(NULL));
-    printf("Nombre de bombes dans le tableau : %d \n", BOMB_NUMBER);
+
+    printf("Il y a %d bombes dans la grille, bon courage !\n", BOMB_NUMBER);
     displayGrid(tableau);
-    printf("Choississez vos coordonnees : \n");
-    printf("x : ");
+
+    printf("Quelle case voulez-vous decouvrir ? :\n");
+    printf("X :");
     scanf_s("%d", &locationX);
-    printf("y : ");
+    printf("Y :");
     scanf_s("%d", &locationY);
-
-    placeBomb(tableau, BOMB_NUMBER, locationX - 1, locationX - 1);
+    
+    placeBomb(tableau, BOMB_NUMBER, locationX, locationY);
     play(tableau, locationX - 1, locationY - 1);
-
-    printf("Nombre de bombes dans le tableau : %d \n", BOMB_NUMBER);
-    system("CLS");
+    system("cls");
     displayGrid(tableau);
 
+   
     while (1) {
-        clock_t temps;
-        temps = clock();
-        int score = temps / CLOCKS_PER_SEC / lap;
-        printf("Choississez vos coordonnees : \n");
-        printf("x : ");
-        scanf_s("%d", &locationX);
-        printf("y : ");
-        scanf_s("%d", &locationY);
+
+        int lap = 1;
+        clock_t temps = clock();
+        int score = temps / CLOCKS_PER_SEC / lap + 1;
+
+        printf("\nTEMPS : %d     TOUR : %d     SCORE : %d\n", (int)temps / CLOCKS_PER_SEC, lap, score);
+        printf("\nQuelle case voulez-vous decouvrir ? :\n");
+        printf("X:");
+        scanf_s(" %d", &locationX);
+        printf("Y:");
+        scanf_s(" %d", &locationY);
 
         if (play(tableau, locationX - 1, locationY - 1) == 3) {
-            system("CLS");
+            system("cls");
             displayGrid(tableau);
-            printf("VOUS AVEZ PERDU RATIO BOZO \n");
-            printf("Vous avez joue %d tours, en %d secondes.", lap - 1, (int)temps / CLOCKS_PER_SEC);
-
-            return 2;
-        }
-        
-        system("CLS");
-        displayGrid(tableau);
-        if (victory(tableau) == 0) {
-            printf("VOUS AVEZ GAGNE GG WP BAKA!!!!! \n");
-            printf("Votre score est de %d, votre partie à durée %d secondes, et vous avez jouer %d tours.", score, (int)temps / CLOCKS_PER_SEC, lap - 1);
+            printf("\nVous avez perdu... :(\n");
+            printf("\nTEMPS : %d     TOUR : %d     SCORE : %d\n", (int)temps / CLOCKS_PER_SEC, lap, score);
             return 1;
+        }
+        else if (victory(tableau) == 0) {
+            system("cls");
+            displayGrid(tableau);
+            printf("\nVOUS AVEZ GAGNE !!!\n");
+            printf("\nTEMPS : %d     TOUR : %d     SCORE : %d\n", (int)temps / CLOCKS_PER_SEC, lap, score);
+            return 2;
         }
 
         lap++;
-        printf("Nombre de tour : %d\n", lap);
-        printf("Temps de la partie : %d\n", (int)temps / CLOCKS_PER_SEC);
+        system("cls");
+        displayGrid(tableau);
     }
    
     return 0;
@@ -92,7 +95,10 @@ void displayGrid( char tableau[GRID_LENGTH][GRID_LENGTH])
                     printf("   |");
                     continue;
                 case 9:
-                    printf(" * |");
+                    Color(12, 0);
+                    printf(" * ");
+                    Color(15, 0);
+                    printf("|");
                     continue;
                 default:
                     printf(" %d |", tableau[i][y] - 3);
@@ -197,4 +203,10 @@ int victory(char tableau[GRID_LENGTH][GRID_LENGTH])
         }   
     }
     return 0;
+}
+
+void Color(int couleurDuTexte, int couleurDeFond) // fonction d'affichage de couleurs
+{
+    HANDLE H = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(H, couleurDeFond * 16 + couleurDuTexte);
 }
