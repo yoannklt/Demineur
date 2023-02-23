@@ -8,14 +8,9 @@
 #define BOMB_CELL 1
 #define HIDDEN_CELL 0
 
-void displayGrid(unsigned char tableau[GRID_LENGTH][GRID_LENGTH]);
-void placeBomb(unsigned char tableau[GRID_LENGTH][GRID_LENGTH], unsigned int quantity);
-int play(unsigned char tableau[GRID_LENGTH][GRID_LENGTH], unsigned int x, unsigned int y);
-int bombsAround(unsigned char tableau[GRID_LENGTH][GRID_LENGTH], unsigned int x, unsigned int y);
-
 void displayGrid( char tableau[GRID_LENGTH][GRID_LENGTH]);
 void placeBomb( char tableau[GRID_LENGTH][GRID_LENGTH],  int quantity);
-void play( char tableau[GRID_LENGTH][GRID_LENGTH],  int x,  int y);
+int play( char tableau[GRID_LENGTH][GRID_LENGTH], int x,  int y);
 int bombsAround( char tableau[GRID_LENGTH][GRID_LENGTH],  int x,  int y);
 
 int main(int argc, char **argv)
@@ -96,7 +91,7 @@ void placeBomb( char tableau[GRID_LENGTH][GRID_LENGTH],  int quantity)
     }
 }
 
-int play(unsigned char tableau[GRID_LENGTH][GRID_LENGTH], unsigned int x, unsigned int y)
+int play(char tableau[GRID_LENGTH][GRID_LENGTH],  int x,  int y)
 {
     tableau[x][y] = DISCOVERED_CELL;
 
@@ -119,7 +114,7 @@ int play(unsigned char tableau[GRID_LENGTH][GRID_LENGTH], unsigned int x, unsign
     }
 }
 
-int bombsAround(unsigned char tableau[GRID_LENGTH][GRID_LENGTH], unsigned int x, unsigned int y)
+int bombsAround( char tableau[GRID_LENGTH][GRID_LENGTH],  int x,  int y)
 {
     int bombsAround = 0;
 
@@ -133,6 +128,6 @@ int bombsAround(unsigned char tableau[GRID_LENGTH][GRID_LENGTH], unsigned int x,
         }
     }
 
-        return bombsAround;
+    return bombsAround;
     
 }
