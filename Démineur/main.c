@@ -104,6 +104,18 @@ void placeBomb( char tableau[GRID_LENGTH][GRID_LENGTH], int quantity, int x, int
             bomb++;
         }
     }
+
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            if (x + i - 1 >= 0 && x + i - 1 < GRID_LENGTH && y + j - 1 >= 0 && y + j - 1 < GRID_LENGTH)
+            {
+                tableau[y + j - 1][x + i - 1] = HIDDEN_CELL;
+            }
+        }
+    }
+
 }
 
 
