@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <windows.h>
+#include "Array.h"
 
 #define GRID_LENGTH 10
 #define BOMB_NUMBER 14
@@ -11,9 +12,8 @@
 
 void welcome();
 void displayGrid( char tableau[GRID_LENGTH][GRID_LENGTH]);
-void placeBomb( char tableau[GRID_LENGTH][GRID_LENGTH],  int quantity, int x, int y);
 int play( char tableau[GRID_LENGTH][GRID_LENGTH], int x,  int y);
-int bombsAround( char tableau[GRID_LENGTH][GRID_LENGTH],  int x,  int y);
+int bombPlacing(int grid[GRID_LENGTH][GRID_LENGTH], int startPosX, int startPosY);
 int victory(char tableau[GRID_LENGTH][GRID_LENGTH]);
 void Color(int couleurDuTexte, int couleurDeFond);
 
@@ -40,11 +40,10 @@ int main(int argc, char **argv)
         scanf_s(" %d", &locationY);
     }
     
-    placeBomb(tableau, BOMB_NUMBER, locationX, locationY);
+    bombPlacing(tableau, locationX, locationY);
     play(tableau, locationX - 1, locationY - 1);
     system("cls");
     displayGrid(tableau);
-
    
     while (1) {
         int lap = 1;
@@ -147,36 +146,6 @@ void displayGrid( char tableau[GRID_LENGTH][GRID_LENGTH])
     }
 }
 
-void placeBomb( char tableau[GRID_LENGTH][GRID_LENGTH], int quantity, int x, int y)
-{
-    int bomb = 1;
-
-    for (int i = 0; i < quantity; i++)
-    {
-        int locationX = rand() % GRID_LENGTH;
-        int locationY = rand() % GRID_LENGTH;
-        if (tableau[locationY][locationX] == BOMB_CELL && (x - 1 <= locationX && locationX <= x + 1 && y - 1 <= locationY && locationY <= y + 1)) {
-            i--;
-            continue;
-        }
-        else {
-            tableau[locationY][locationX] = BOMB_CELL;
-            bomb++;
-        }
-    }
-
-    for (int i = 0; i < 3; i++){
-        for (int j = 0; j < 3; j++){
-            if (x + i - 1 >= 0 && x + i - 1 < GRID_LENGTH && y + j - 1 >= 0 && y + j - 1 < GRID_LENGTH)
-            {
-                tableau[y + j - 1][x + i - 1] = HIDDEN_CELL;
-            }
-        }
-    }
-
-}
-
-
 int play(char tableau[GRID_LENGTH][GRID_LENGTH],  int x,  int y)
 {
     int bombs = bombsAround(tableau, x, y);
@@ -244,4 +213,36 @@ void Color(int couleurDuTexte, int couleurDeFond)
 {
     HANDLE H = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleTextAttribute(H, couleurDeFond * 16 + couleurDuTexte);
+}
+
+int bombPlacing(char tableau[GRID_LENGTH][GRID_LENGTH], int startPosX, int startPosY)
+{
+    srand(time(NULL));
+    const int FREE_CASE_COUNT = (GRID_LENGTH) * (GRID_LENGTH);
+    if (FREE_CASE_COUNT < BOMB_NUMBER)
+        return 1;
+    stArray freeIndex = createTab(FREE_CASE_COUNT);
+    int randomPos, i = 0;
+
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            if (startPosX + i - 1 >= 0 && startPosX + i - 1 < GRID_LENGTH && startPosY + j - 1 >= 0 && startPosY < GRID_LENGTH) {
+                removeAt(&freeIndex, (startPosY) * 10 + (j - 1) * 10 + (startPosX) + i - 1);
+            }
+        }
+    }
+
+
+    for (i = 0; i < BOMB_NUMBER; i++)
+    {
+        randomPos = rand() % (freeIndex.size - i - 9);
+        printf("RandomPos : %d    Coordonnes :%d | %d\n", randomPos ,freeIndex.point[randomPos] / 10, freeIndex.point[randomPos] % 10);
+        tableau[freeIndex.point[randomPos] / 10][freeIndex.point[randomPos] % 10] = BOMB_CELL;
+        removeAt(&freeIndex, randomPos);
+    }
+
+    free(freeIndex.point);
+    return 0;
 }
