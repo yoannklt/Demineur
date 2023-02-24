@@ -13,7 +13,7 @@
 void welcome();
 void displayGrid( char tableau[GRID_LENGTH][GRID_LENGTH]);
 int play( char tableau[GRID_LENGTH][GRID_LENGTH], int x,  int y);
-int bombPlacing(int grid[GRID_LENGTH][GRID_LENGTH], int startPosX, int startPosY);
+int bombPlacing(char grid[GRID_LENGTH][GRID_LENGTH], int startPosX, int startPosY);
 int victory(char tableau[GRID_LENGTH][GRID_LENGTH]);
 void Color(int couleurDuTexte, int couleurDeFond);
 
@@ -134,7 +134,7 @@ void displayGrid( char tableau[GRID_LENGTH][GRID_LENGTH])
                     printf("|");
                     continue;
                 default:
-                    printf(" %d |", tableau[i][y] - 3);
+                    printf(" %d |", tableau[i][y]);
                     continue;
             }           
         }
@@ -148,6 +148,9 @@ void displayGrid( char tableau[GRID_LENGTH][GRID_LENGTH])
 
 int play(char tableau[GRID_LENGTH][GRID_LENGTH],  int x,  int y)
 {
+    tableau[x][y] = DISCOVERED_CELL;
+    int lapcounter = 0;
+
     int bombs = bombsAround(tableau, x, y);
 
     if (tableau[y][x] == BOMB_CELL) {
@@ -163,20 +166,21 @@ int play(char tableau[GRID_LENGTH][GRID_LENGTH],  int x,  int y)
         tableau[y][x] = DISCOVERED_CELL;
 
     if (bombs != 0) {
-        tableau[y][x] = bombs + 3;
+        tableau[x][y] = DISCOVERED_CELL;
+        printf("%d"+1 , lapcounter);
         return 1;
     }
 
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
             if (i - 1 != 0 || j - 1 != 0) {
-                if ((x + i - 1 >= 0 && x + i - 1 < GRID_LENGTH && y + j - 1 >= 0 && y + j - 1 < GRID_LENGTH) && tableau[y + j - 1][x + i - 1] == HIDDEN_CELL) {
-                    play(tableau, x + i - 1, y + j - 1);
+                if ((x + i - 1 >= 0 && x + i - 1 < GRID_LENGTH && y + j - 1 >= 0 && y + j - 1 < GRID_LENGTH) && tableau[y + j - 1][x + i - 1] == BOMB_CELL) {
+                    tableau[i][j] = DISCOVERED_CELL;
+                    play(tableau, i, j);
                 }
             }
         }
     }
-    return 0;
 }
 
 int bombsAround( char tableau[GRID_LENGTH][GRID_LENGTH],  int x,  int y)
