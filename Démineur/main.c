@@ -12,50 +12,45 @@
 
 void welcome();
 void displayGrid( char tableau[GRID_LENGTH][GRID_LENGTH]);
-int play( char tableau[GRID_LENGTH][GRID_LENGTH], int x,  int y);
+int play(char tableau[GRID_LENGTH][GRID_LENGTH], int x,  int y);
 int bombPlacing(char grid[GRID_LENGTH][GRID_LENGTH], int startPosX, int startPosY);
+int bombsAround(char tableau[GRID_LENGTH][GRID_LENGTH], int x, int y);
 int victory(char tableau[GRID_LENGTH][GRID_LENGTH]);
 void Color(int couleurDuTexte, int couleurDeFond);
 
 int main(int argc, char **argv)
 {
     char tableau[GRID_LENGTH][GRID_LENGTH] = { 0 };
-    int locationX = 0;
-    int locationY = 0;
+    int locationX = 44;
+    int locationY = 44;
     srand(time(NULL));
     welcome();
     displayGrid(tableau);
    
-    printf("Quelle case voulez-vous decouvrir ? :\n");
-    printf("X:");
-    scanf_s(" %d", &locationX);
-    printf("Y:");
-    scanf_s(" %d", &locationY);
-    while (locationX - 1 > GRID_LENGTH || locationY - 1 > GRID_LENGTH) {
-        printf("\nJouez des coordonnees X et Y comprises entre 1 et %d\n", GRID_LENGTH);
+    while (locationX - 1 > GRID_LENGTH - 1|| 0 > locationX - 1 || locationY - 1 > GRID_LENGTH - 1|| 0 > locationY - 1) {
         printf("Quelle case voulez-vous decouvrir ? :\n");
         printf("X:");
         scanf_s(" %d", &locationX);
         printf("Y:");
         scanf_s(" %d", &locationY);
     }
+
     
-    bombPlacing(tableau, locationX, locationY);
+    bombPlacing(tableau, locationX - 1, locationY - 1);
     play(tableau, locationX - 1, locationY - 1);
+    
+    
     system("cls");
     displayGrid(tableau);
    
     while (1) {
+        locationX = 44;
+        locationY = 44;
         int lap = 1;
         clock_t temps = clock();
         int score = temps / CLOCKS_PER_SEC / lap + 1;
 
         printf("\nTEMPS : %d     TOUR : %d     SCORE : %d\n", (int)temps / CLOCKS_PER_SEC, lap, score);
-        printf("\nQuelle case voulez-vous decouvrir ? :\n");
-        printf("X:");
-        scanf_s(" %d", &locationX);
-        printf("Y:");
-        scanf_s(" %d", &locationY);
         while (locationX - 1 > GRID_LENGTH || locationY - 1 > GRID_LENGTH) {
             printf("\nJouez des coordonnees X et Y comprises entre 1 et %d", GRID_LENGTH);
             printf("\nQuelle case voulez-vous decouvrir ? :\n");
@@ -65,7 +60,7 @@ int main(int argc, char **argv)
             scanf_s(" %d", &locationY);
         }
   
-        if (play(tableau, locationX - 1, locationY - 1) == 3) {
+        if (play(tableau, locationX - 1, locationY - 1) == 1) {
             system("cls");
             displayGrid(tableau);
             printf("\nVous avez perdu... :(\n");
@@ -134,22 +129,20 @@ void displayGrid( char tableau[GRID_LENGTH][GRID_LENGTH])
                     printf("|");
                     continue;
                 default:
-                    printf(" %d |", tableau[i][y]);
+                    printf(" %d |", tableau[i][y] - 3);
                     continue;
             }           
         }
         printf("\n");
-        for (int z = 0; z < GRID_LENGTH + 4; z++) {
-            printf("---");
+        for (int z = 0; z < GRID_LENGTH + 1; z++) {
+            printf("----");
         }
-        printf("--\n");
+        printf("\n");
     }
 }
 
 int play(char tableau[GRID_LENGTH][GRID_LENGTH],  int x,  int y)
 {
-    tableau[x][y] = DISCOVERED_CELL;
-    int lapcounter = 0;
 
     int bombs = bombsAround(tableau, x, y);
 
@@ -160,37 +153,42 @@ int play(char tableau[GRID_LENGTH][GRID_LENGTH],  int x,  int y)
                     tableau[i][j] = 9;
             }
         }
-        return 3;
-    }
-    else 
-        tableau[y][x] = DISCOVERED_CELL;
-
-    if (bombs != 0) {
-        tableau[x][y] = DISCOVERED_CELL;
-        printf("%d"+1 , lapcounter);
         return 1;
     }
+    if (bombs != 0)
+    {
+        tableau[y][x] = bombs + 3;
+        return 0;
+    }
 
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 3; j++) {
-            if (i - 1 != 0 || j - 1 != 0) {
-                if ((x + i - 1 >= 0 && x + i - 1 < GRID_LENGTH && y + j - 1 >= 0 && y + j - 1 < GRID_LENGTH) && tableau[y + j - 1][x + i - 1] == BOMB_CELL) {
-                    tableau[i][j] = DISCOVERED_CELL;
-                    play(tableau, i, j);
+    tableau[y][x] = DISCOVERED_CELL;
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            if (i - 1 != 0 || j - 1 != 0)
+            {
+                if ((x + i - 1 >= 0 && x + i - 1 < GRID_LENGTH && y + j - 1 >= 0 && y + j - 1 < GRID_LENGTH) && tableau[y + j - 1][x + i - 1] == HIDDEN_CELL)
+                {
+                    play(tableau, x + i - 1, y + j - 1);
                 }
             }
         }
     }
+    return 0;
 }
 
 int bombsAround( char tableau[GRID_LENGTH][GRID_LENGTH],  int x,  int y)
 {
+    
     int bombsAround = 0;
 
     for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 3; j++) {
-            if (i - 1 != 0 || j - 1 != 0) {
-                if ((x + i - 1 >= 0 && x + i - 1 < GRID_LENGTH && y + j - 1 >= 0 && y + j - 1 < GRID_LENGTH) && tableau[y + j - 1][x + i - 1] == BOMB_CELL) {
+        for (int j = 0; j < 3; j++){
+            if (i - 1 != 0 || j - 1 != 0)
+            {
+                if ((x + i - 1 >= 0 && x + i - 1 < GRID_LENGTH && y + j - 1 >= 0 && y + j - 1 < GRID_LENGTH) && tableau[y + j - 1][x + i - 1] == BOMB_CELL)
+                {
                     bombsAround++;
                 }
             }
@@ -219,22 +217,26 @@ void Color(int couleurDuTexte, int couleurDeFond)
     SetConsoleTextAttribute(H, couleurDeFond * 16 + couleurDuTexte);
 }
 
-int bombPlacing(char tableau[GRID_LENGTH][GRID_LENGTH], int startPosX, int startPosY)
+int bombPlacing(char grid[GRID_LENGTH][GRID_LENGTH], int startPosX, int startPosY)
 {
     srand(time(NULL));
     const int FREE_CASE_COUNT = (GRID_LENGTH) * (GRID_LENGTH);
     if (FREE_CASE_COUNT < BOMB_NUMBER)
         return 1;
     stArray freeIndex = createTab(FREE_CASE_COUNT);
-    int randomPos, i = 0;
+    int randomPos, i, j = 0;
 
-    for (int i = 0; i < 3; i++)
+
+    for (i = 3; i > 0; i--)
     {
-        for (int j = 0; j < 3; j++)
+        for (j = 3; j > 0; j--)
         {
-            if (startPosX + i - 1 >= 0 && startPosX + i - 1 < GRID_LENGTH && startPosY + j - 1 >= 0 && startPosY < GRID_LENGTH) {
-                removeAt(&freeIndex, (startPosY) * 10 + (j - 1) * 10 + (startPosX) + i - 1);
+            if (startPosX + i - 1 >= 0 && startPosX + i - 1 < GRID_LENGTH && startPosY + j - 1 >= 0 && startPosY + j - 1 < GRID_LENGTH)
+            {
+                //printf("indice [%d]: %d\n", (startPosY + i - 2) * 10 + startPosX + j - 2, freeIndex.point[(startPosY + i - 2) * 10 + startPosX + j - 2]);
+                removeAt(&freeIndex, (startPosY + i - 1) * 10 + startPosX + j - 1);
             }
+
         }
     }
 
@@ -242,8 +244,8 @@ int bombPlacing(char tableau[GRID_LENGTH][GRID_LENGTH], int startPosX, int start
     for (i = 0; i < BOMB_NUMBER; i++)
     {
         randomPos = rand() % (freeIndex.size - i - 9);
-        printf("RandomPos : %d    Coordonnes :%d | %d\n", randomPos ,freeIndex.point[randomPos] / 10, freeIndex.point[randomPos] % 10);
-        tableau[freeIndex.point[randomPos] / 10][freeIndex.point[randomPos] % 10] = BOMB_CELL;
+        //printf("RandomPos : %d    Coordonnes :%d | %d\n", randomPos ,freeIndex.point[randomPos] / 10, freeIndex.point[randomPos] % 10);
+        grid[freeIndex.point[randomPos] / 10][freeIndex.point[randomPos] % 10] = BOMB_CELL;
         removeAt(&freeIndex, randomPos);
     }
 
