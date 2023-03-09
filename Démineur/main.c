@@ -30,9 +30,9 @@ int main(int argc, char **argv)
     while (locationX - 1 > GRID_LENGTH - 1|| 0 > locationX - 1 || locationY - 1 > GRID_LENGTH - 1|| 0 > locationY - 1) {
         printf("Quelle case voulez-vous decouvrir ? :\n");
         printf("X:");
-        scanf_s(" %d", &locationX);
+        scanf_s(" %d[10]", &locationX);
         printf("Y:");
-        scanf_s(" %d", &locationY);
+        scanf_s(" %d[10]", &locationY);
     }
 
     
@@ -55,9 +55,11 @@ int main(int argc, char **argv)
             printf("\nJouez des coordonnees X et Y comprises entre 1 et %d", GRID_LENGTH);
             printf("\nQuelle case voulez-vous decouvrir ? :\n");
             printf("X:");
-            scanf_s(" %d", &locationX);
+            while (scanf_s(" %d", &locationX) == 1)
+                continue;
             printf("Y:");
-            scanf_s(" %d", &locationY);
+            while (scanf_s(" %d", &locationY) == 1)
+                continue;
         }
   
         if (play(tableau, locationX - 1, locationY - 1) == 1) {
