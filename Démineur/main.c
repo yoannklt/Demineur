@@ -55,11 +55,9 @@ int main(int argc, char **argv)
             printf("\nJouez des coordonnees X et Y comprises entre 1 et %d", GRID_LENGTH);
             printf("\nQuelle case voulez-vous decouvrir ? :\n");
             printf("X:");
-            while (scanf_s(" %d", &locationX) == 1)
-                continue;
+            scanf_s(" %d", &locationX);
             printf("Y:");
-            while (scanf_s(" %d", &locationY) == 1)
-                continue;
+            scanf_s(" %d", &locationY);
         }
   
         if (play(tableau, locationX - 1, locationY - 1) == 1) {
